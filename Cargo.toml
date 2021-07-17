@@ -25,6 +25,7 @@ tokio = "1"
 actix-web = "=4.0.0-beta.8"
 actix-http = "=3.0.0-beta.8"
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
+config = { version = "0.10.1", default-features = false, features = ["yaml"] }
 
 [dependencies.sqlx]
 version = "0.5.5"
