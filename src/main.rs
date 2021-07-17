@@ -1,4 +1,4 @@
-use zerotoprod::run;
+use zerotoprod::startup::run;
 use std::net::TcpListener;
 
 #[actix_web::main]
