@@ -1,7 +1,7 @@
-//! tests/
-//!
+//! tests/health_check.rs
 
 use std::net::TcpListener;
+use zerotoprod::configuration::get_configuration;
 
 /// Spin up an instance of our application
 /// and return its address (e.g. http://localhost:1234)
@@ -42,6 +42,7 @@ async fn health_check_works() {
 async fn subscribe_returns_a_200_for_valid_form_data() {
     // Arrange
     let app_address = spawn_app();
+    let configuration = get_configuration().expect("Failed to read configuration.");
     let client = reqwest::Client::new();
     let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
 
