@@ -20,6 +20,7 @@ name = "zerotoprod"
 # There is _some_ turbulence when working with betas,
 # we are pinning a few other supporting packages to ensure
 # compatibility.
+serde = { version = "1", features = ["derive"] }
 tokio = "1"
 actix-web = "=4.0.0-beta.8"
 actix-http = "=3.0.0-beta.8"
