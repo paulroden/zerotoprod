@@ -4,6 +4,7 @@ use uuid::Uuid;
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;
 use sqlx::PgPool;
+use log;
 
 #[derive(Deserialize)]
 pub struct FormData {
@@ -29,9 +30,12 @@ pub async fn subscribe(
     .execute(db_pool.get_ref())
     .await
     {
-        Ok(_) => HttpResponse::Ok().finish(),
+        Ok(_) => {
+            log::info!("New subscriber details have been saved to database.");
+            HttpResponse::Ok().finish()
+        },
         Err(e) => {
-            println!("Failed to execute query: {}", e);
+            log::error!("Failed to execute query: {:?}", e);
             HttpResponse::InternalServerError().finish()
         }
     }
