@@ -4,6 +4,9 @@ use zerotoprod::configuration::get_configuration;
 use std::net::TcpListener;
 use sqlx::PgPool;
 use env_logger::Env;
+use tracing::subscriber::set_global_default;
+use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
