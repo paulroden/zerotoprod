@@ -8,7 +8,7 @@ use sqlx::PgPool;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let subscriber = get_subscriber("zerotoprod".into(), "info".into());
+    let subscriber = get_subscriber("zerotoprod".into(), "info".into(), std::io::stdout);
     init_subscriber(subscriber);
     
     // Try to read configuration and panic if this fails

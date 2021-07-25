@@ -1,6 +1,6 @@
 //! src/telemetry.rs
 use tracing::{Subscriber, subscriber::set_global_default};
-use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
+use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry, fmt::MakeWriter};
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
 use tracing_log::LogTracer;
 
@@ -8,12 +8,13 @@ use tracing_log::LogTracer;
 pub fn get_subscriber(
     name: String,
     env_filter: String,
+    sink: impl MakeWriter + Send + Sync + 'static,
 ) -> impl Subscriber + Send + Sync {
     // Fall back to having all tracing spans at INFO level or abive
     // if the RUST_LOG environment has not been set.
     let env_filter = EnvFilter::try_from_default_env()
         .unwrap_or_else(|_| EnvFilter::new(env_filter));
-    let formatting_layer = BunyanFormattingLayer::new(name, std::io::stdout);
+    let formatting_layer = BunyanFormattingLayer::new(name, sink);
     // set-up tracing subscriber using settings above and
     // instantiate with `set_global_default`
     Registry::default()
