@@ -29,7 +29,6 @@ actix-http = "=3.0.0-beta.8"
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
 config = { version = "0.10.1", default-features = false, features = ["yaml"] }
 env_logger = { version = "0.9.0" }
-log = "0.4.14"
 tracing-subscriber = { version = "0.2.12", features = ["registry", "env-filter"] }
 tracing-bunyan-formatter = { version = "0.2.4" }
 tracing-futures = "0.2.5"
