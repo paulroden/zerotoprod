@@ -6,11 +6,14 @@ use sqlx::PgPool;
 use tracing::subscriber::set_global_default;
 use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
+use tracing_log::LogTracer;
 
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    
+    // Redirect all `log`'s events to our tracing subscriber
+    LogTracer::init().expect("Failed to set logger.");
+
     // Fall back to having all tracing spans at INFO level or abive
     // if the RUST_LOG environment has not been set.
     let env_filter = EnvFilter::try_from_default_env()
