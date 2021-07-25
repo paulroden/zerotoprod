@@ -16,15 +16,19 @@ pub async fn subscribe(
     db_pool: web::Data<PgPool>
 ) -> HttpResponse {
     let request_id = Uuid::new_v4();
-    tracing::info!(
-        "request_id {} - Adding '{}' '{}' as a new subscriber.",
-        request_id,
-        form.email,
-        form.name,
+    let request_span = tracing::info_span!(
+        "Adding a new subscriber.",
+        %request_id,
+        email = %form.email,
+        name = %form.name,
     );
-    tracing::info!(
-        "request_id {} - Saving new subscriber details to the database.",
-        request_id,
+    let _request_span_guard = request_span.enter();
+
+    // We do not call `.enter` on query_span
+    // `.instrument takes care of it at the right moments
+    // in the query future lifetime
+    let query_span = tracing::info_span!(
+        "Saving new subscriber details to the database."
     );
     match sqlx::query!(
         r#"
