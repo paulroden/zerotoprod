@@ -43,7 +43,6 @@ pub async fn insert_subscriber(
     name = "Adding a new subscriber.",
     skip(form, pool),
     fields(
-        request_id = %Uuid::new_v4(),
         email = %form.email,
         name = %form.name,
     )
