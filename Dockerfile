@@ -5,6 +5,8 @@ FROM rust:1.53.0
 WORKDIR /app
 # Copy all files from working environment to Docker image
 COPY . .
+# Set offline mode for sqlx
+ENV SQLX_OFFLINE true
 # Build release binaries
 RUN cargo build --release
 # Launch binary on execute of `docker run`
