@@ -50,3 +50,4 @@ features = [
 
 [dev-dependencies]
 actix-rt = "=2"
+once_cell = "1.8.0"

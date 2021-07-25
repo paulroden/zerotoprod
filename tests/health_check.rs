@@ -4,7 +4,15 @@ use uuid::Uuid;
 use std::net::TcpListener;
 use sqlx::{PgPool, PgConnection, Connection, Executor};
 use zerotoprod::configuration::{get_configuration, DatabaseSettings};
+use zerotoprod::telemetry::{get_subscriber, init_subscriber};
 use zerotoprod::startup::run;
+use once_cell::sync::Lazy;
+
+// Ensure that the `tracing` stack is only initialised once using `once_cell`
+static TRACING: Lazy<()> = Lazy::new(|| {
+    let subscriber = get_subscriber("test".into(), "debug".into());
+    init_subscriber(subscriber);
+});
 
 pub struct TestApp {
     pub address: String,
@@ -14,6 +22,9 @@ pub struct TestApp {
 /// Spin up an instance of our application
 /// and return its address (e.g. http://localhost:1234)
 async fn spawn_app() -> TestApp {
+    // Initialise telemetry; once only using `once_cell` Lazy
+    Lazy::force(&TRACING);
+
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind to random port");
     // retrieve port assigned by the OS
     let port = listener.local_addr().unwrap().port();
