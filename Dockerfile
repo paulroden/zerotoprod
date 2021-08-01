@@ -1,15 +1,23 @@
-# Use the latest Rust stable release as base image
-FROM rust:1.53.0
-
-# Switch working directory to `app` on route of Docker image instance
+# Builder stage
+## Use the latest Rust stable release as base image
+FROM rust:1.53.0 AS builder
 WORKDIR /app
-# Copy all files from working environment to Docker image
 COPY . .
-# Set offline mode for sqlx
 ENV SQLX_OFFLINE true
-# Build release binaries
 RUN cargo build --release
-# Docker instance is as `production`
+
+# Runtime stage
+FROM debian:buster-slim AS runtime
+WORKDIR /app
+# Install OpenSSL - it is dynamically linked by some of our dependencies
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends openssl \
+    # Clean up
+    && apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app/target/release/zerotoprod zerotoprod
+COPY configuration configuration
 ENV APP_ENVIRONMENT production
 # Launch binary on execute of `docker run`
-ENTRYPOINT ["./target/release/zerotoprod"]
+ENTRYPOINT ["./zerotoprod"]
