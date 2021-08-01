@@ -1,6 +1,4 @@
 //! src/routes/subscriptions.rs
-use chrono::Utc;
-use uuid::Uuid;
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;
 use sqlx::PgPool;
@@ -24,10 +22,10 @@ pub async fn insert_subscriber(
         INSERT INTO subscriptions (id, email, name, subscribed_at)
         VALUES ($1, $2, $3, $4)
         "#,
-        Uuid::new_v4(),
+        uuid::Uuid::new_v4(),
         form.email,
         form.name,
-        Utc::now(),
+        chrono::Utc::now(),
     )
     // We use `get_ref` to get an immutable reference to the `PgConnection` wrapped by web::Data
     .execute(pool)
